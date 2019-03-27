@@ -1,0 +1,25 @@
+{
+  "name": "packaged/enum",
+  "license": "MIT",
+  "description": "Helpers for implementing constant based enums",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Tom Kay",
+      "email": "oridan82@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "packaged/helpers": "^1.0|^2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Packaged\\Enum\\": "src",
+      "Packaged\\Tests\\": "tests"
+    }
+  }
+}
