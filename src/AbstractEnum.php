@@ -28,7 +28,10 @@ abstract class AbstractEnum
     return $this->_value;
   }
 
-  public static function getValues(): array
+  /**
+   * @return mixed
+   */
+  public static function getValues()
   {
     $class = static::class;
     if(!isset(self::$_valueCache[$class]))
@@ -43,7 +46,7 @@ abstract class AbstractEnum
   /**
    * @return array
    */
-  public static function getKeyedValues(): array
+  public static function getKeyedValues()
   {
     $return = [];
     foreach(static::getValues() as $value)
