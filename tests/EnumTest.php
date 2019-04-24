@@ -41,4 +41,12 @@ class EnumTest extends TestCase
     $this->assertEquals(TestEnum::V_1, $enum->getValue());
     $this->assertEquals('v1-api.com', $enum->getUrl());
   }
+
+  public function testMatch()
+  {
+    $enum = new TestEnum(TestEnum::V_1, 'api.com');
+    $this->assertTrue($enum->is(TestEnum::V_1));
+    $this->assertFalse($enum->is(new TestEnum(TestEnum::V_1)));
+    $this->assertTrue($enum->is(new TestEnum(TestEnum::V_1, 'api.com')));
+  }
 }

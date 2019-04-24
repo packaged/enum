@@ -2,6 +2,7 @@
 namespace Packaged\Enum;
 
 use Packaged\Helpers\Strings;
+use ReflectionClass;
 
 abstract class AbstractEnum
 {
@@ -29,18 +30,38 @@ abstract class AbstractEnum
   }
 
   /**
-   * @return mixed
+   * Check the current enum is of type X
+   *
+   * @param mixed $value Enum value to match the current enum against
+   *
+   * @return bool
    */
+  final public function is($value)
+  {
+    return $value instanceof AbstractEnum ? $this->_enumMatch($value) : $this->getValue() === $value;
+  }
+
+  /**
+   * Override this method to support more advanced enum matching
+   *
+   * @param AbstractEnum $enum
+   *
+   * @return bool
+   */
+  protected function _enumMatch(AbstractEnum $enum)
+  {
+    return $this instanceof static && $this->getValue() === $enum->getValue();
+  }
+
   public static function getValues()
   {
-    $class = static::class;
-    if(!isset(self::$_valueCache[$class]))
+    if(!isset(self::$_valueCache[static::class]))
     {
       /** @noinspection PhpUnhandledExceptionInspection */
-      $oClass = new \ReflectionClass($class);
-      self::$_valueCache[$class] = array_values($oClass->getConstants());
+      $oClass = new ReflectionClass(static::class);
+      self::$_valueCache[static::class] = array_values($oClass->getConstants());
     }
-    return self::$_valueCache[$class];
+    return self::$_valueCache[static::class];
   }
 
   /**

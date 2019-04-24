@@ -22,4 +22,11 @@ class TestEnum extends AbstractEnum
   {
     return $this->_url;
   }
+
+  protected function _enumMatch(AbstractEnum $enum)
+  {
+    /** @var static $enum */
+    return parent::_enumMatch($enum) && $this->getUrl() === $enum->getUrl();
+  }
+
 }
