@@ -3,6 +3,8 @@ namespace Packaged\Enum;
 
 use Packaged\Helpers\Strings;
 use ReflectionClass;
+use function array_values;
+use function in_array;
 
 abstract class AbstractEnum
 {
@@ -15,18 +17,58 @@ abstract class AbstractEnum
     $this->_setValue($value);
   }
 
-  final protected function _setValue($value)
+  /**
+   * @return array
+   */
+  public static function getKeyedValues()
   {
-    if(!static::isValidStrict($value))
+    $return = [];
+    foreach(static::getValues() as $value)
     {
-      throw new \InvalidArgumentException('Invalid enum value for ' . static::class);
+      $return[$value] = static::getDisplayValue($value);
     }
-    $this->_value = $value;
+    return $return;
   }
 
-  final public function getValue()
+  public static function getValues()
   {
-    return $this->_value;
+    if(!isset(self::$_valueCache[static::class]))
+    {
+      /** @noinspection PhpUnhandledExceptionInspection */
+      $oClass = new ReflectionClass(static::class);
+      self::$_valueCache[static::class] = array_values($oClass->getConstants());
+    }
+    return self::$_valueCache[static::class];
+  }
+
+  /**
+   * @param $value
+   *
+   * @return string
+   */
+  public static function getDisplayValue($value)
+  {
+    return Strings::titleize($value);
+  }
+
+  /**
+   * @param $value
+   *
+   * @return bool
+   */
+  public static function isValid($value)
+  {
+    return in_array($value, static::getValues(), false);
+  }
+
+  /**
+   * @param $value
+   *
+   * @return bool
+   */
+  public static function isValidStrict($value)
+  {
+    return in_array($value, static::getValues(), true);
   }
 
   /**
@@ -53,57 +95,17 @@ abstract class AbstractEnum
     return $this instanceof static && $this->getValue() === $enum->getValue();
   }
 
-  public static function getValues()
+  final public function getValue()
   {
-    if(!isset(self::$_valueCache[static::class]))
+    return $this->_value;
+  }
+
+  final protected function _setValue($value)
+  {
+    if(!static::isValidStrict($value))
     {
-      /** @noinspection PhpUnhandledExceptionInspection */
-      $oClass = new ReflectionClass(static::class);
-      self::$_valueCache[static::class] = array_values($oClass->getConstants());
+      throw new \InvalidArgumentException('Invalid enum value for ' . static::class);
     }
-    return self::$_valueCache[static::class];
-  }
-
-  /**
-   * @return array
-   */
-  public static function getKeyedValues()
-  {
-    $return = [];
-    foreach(static::getValues() as $value)
-    {
-      $return[$value] = static::getDisplayValue($value);
-    }
-    return $return;
-  }
-
-  /**
-   * @param $value
-   *
-   * @return bool
-   */
-  public static function isValid($value)
-  {
-    return in_array($value, static::getValues(), false);
-  }
-
-  /**
-   * @param $value
-   *
-   * @return bool
-   */
-  public static function isValidStrict($value)
-  {
-    return in_array($value, static::getValues(), true);
-  }
-
-  /**
-   * @param $value
-   *
-   * @return string
-   */
-  public static function getDisplayValue($value)
-  {
-    return Strings::titleize($value);
+    $this->_value = $value;
   }
 }
