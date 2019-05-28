@@ -20,7 +20,7 @@ abstract class AbstractEnum
   /**
    * @return array
    */
-  public static function getKeyedValues()
+  final public static function getKeyedValues()
   {
     $return = [];
     foreach(static::_valueCache() as $value)
@@ -30,7 +30,7 @@ abstract class AbstractEnum
     return $return;
   }
 
-  private static function _valueCache()
+  final private static function _valueCache()
   {
     if(!isset(self::$_valueCache[static::class]))
     {
@@ -41,7 +41,7 @@ abstract class AbstractEnum
     return self::$_valueCache[static::class];
   }
 
-  public static function getValues()
+  final public static function getValues()
   {
     return array_values(static::_valueCache());
   }
@@ -61,7 +61,7 @@ abstract class AbstractEnum
    *
    * @return bool
    */
-  public static function isValid($value)
+  final public static function isValid($value)
   {
     return in_array($value, static::_valueCache(), false);
   }
@@ -71,7 +71,7 @@ abstract class AbstractEnum
    *
    * @return bool
    */
-  public static function isValidStrict($value)
+  final public static function isValidStrict($value)
   {
     return in_array($value, static::_valueCache(), true);
   }
@@ -105,6 +105,14 @@ abstract class AbstractEnum
     return $this->_value;
   }
 
+  /**
+   * @return string
+   */
+  public function __toString()
+  {
+    return (string)$this->_value;
+  }
+
   final protected function _setValue($value)
   {
     if(!static::isValidStrict($value))
@@ -120,7 +128,7 @@ abstract class AbstractEnum
    *
    * @return $this
    */
-  final public static function __callStatic($method, array $args)
+  public static function __callStatic($method, array $args)
   {
     foreach(static::_valueCache() as $key => $value)
     {
