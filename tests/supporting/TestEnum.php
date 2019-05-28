@@ -4,11 +4,16 @@ namespace Packaged\Tests\supporting;
 
 use Packaged\Enum\AbstractEnum;
 
+/**
+ * @method static TestEnum V1()
+ * @method static TestEnum V2()
+ * @method static TestEnum V3()
+ */
 class TestEnum extends AbstractEnum
 {
-  const V_1 = 'v1';
-  const V_2 = 'v2';
-  const V_3 = '3';
+  const V1 = 'v1';
+  const V2 = 'v2';
+  const V3 = '3';
 
   protected $_url;
 

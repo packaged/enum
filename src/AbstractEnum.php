@@ -1,6 +1,7 @@
 <?php
 namespace Packaged\Enum;
 
+use InvalidArgumentException;
 use Packaged\Helpers\Strings;
 use ReflectionClass;
 use function array_values;
@@ -9,7 +10,6 @@ use function in_array;
 abstract class AbstractEnum
 {
   private static $_valueCache = [];
-
   private $_value;
 
   public function __construct($value)
@@ -23,22 +23,27 @@ abstract class AbstractEnum
   public static function getKeyedValues()
   {
     $return = [];
-    foreach(static::getValues() as $value)
+    foreach(static::_valueCache() as $value)
     {
       $return[$value] = static::getDisplayValue($value);
     }
     return $return;
   }
 
-  public static function getValues()
+  private static function _valueCache()
   {
     if(!isset(self::$_valueCache[static::class]))
     {
       /** @noinspection PhpUnhandledExceptionInspection */
       $oClass = new ReflectionClass(static::class);
-      self::$_valueCache[static::class] = array_values($oClass->getConstants());
+      self::$_valueCache[static::class] = $oClass->getConstants();
     }
     return self::$_valueCache[static::class];
+  }
+
+  public static function getValues()
+  {
+    return array_values(static::_valueCache());
   }
 
   /**
@@ -58,7 +63,7 @@ abstract class AbstractEnum
    */
   public static function isValid($value)
   {
-    return in_array($value, static::getValues(), false);
+    return in_array($value, static::_valueCache(), false);
   }
 
   /**
@@ -68,7 +73,7 @@ abstract class AbstractEnum
    */
   public static function isValidStrict($value)
   {
-    return in_array($value, static::getValues(), true);
+    return in_array($value, static::_valueCache(), true);
   }
 
   /**
@@ -107,5 +112,23 @@ abstract class AbstractEnum
       throw new \InvalidArgumentException('Invalid enum value for ' . static::class);
     }
     $this->_value = $value;
+  }
+
+  /**
+   * @param       $method
+   * @param array $args
+   *
+   * @return $this
+   */
+  final public static function __callStatic($method, array $args)
+  {
+    foreach(static::_valueCache() as $key => $value)
+    {
+      if($method === $key)
+      {
+        return new static($value, ...$args);
+      }
+    }
+    throw new InvalidArgumentException($method . ' is not a valid value for ' . static::class);
   }
 }

@@ -31,22 +31,33 @@ class EnumTest extends TestCase
 
   public function testInstancedEnum()
   {
-    $enum = new TestEnum(TestEnum::V_1);
-    $this->assertEquals(TestEnum::V_1, $enum->getValue());
+    $enum = new TestEnum(TestEnum::V1);
+    $this->assertEquals(TestEnum::V1, $enum->getValue());
+  }
+
+  public function testInstancedStaticEnum()
+  {
+    $this->assertEquals(TestEnum::V1, TestEnum::V1()->getValue());
+  }
+
+  public function testInvalidInstancedStaticEnum()
+  {
+    $this->expectExceptionMessage("V_gd is not a valid value for Packaged\Tests\supporting\TestEnum");
+    TestEnum::V_gd();
   }
 
   public function testInstancedEnumUrl()
   {
-    $enum = new TestEnum(TestEnum::V_1, 'api.com');
-    $this->assertEquals(TestEnum::V_1, $enum->getValue());
+    $enum = new TestEnum(TestEnum::V1, 'api.com');
+    $this->assertEquals(TestEnum::V1, $enum->getValue());
     $this->assertEquals('v1-api.com', $enum->getUrl());
   }
 
   public function testMatch()
   {
-    $enum = new TestEnum(TestEnum::V_1, 'api.com');
-    $this->assertTrue($enum->is(TestEnum::V_1));
-    $this->assertFalse($enum->is(new TestEnum(TestEnum::V_1)));
-    $this->assertTrue($enum->is(new TestEnum(TestEnum::V_1, 'api.com')));
+    $enum = new TestEnum(TestEnum::V1, 'api.com');
+    $this->assertTrue($enum->is(TestEnum::V1));
+    $this->assertFalse($enum->is(new TestEnum(TestEnum::V1)));
+    $this->assertTrue($enum->is(new TestEnum(TestEnum::V1, 'api.com')));
   }
 }
