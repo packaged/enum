@@ -11,7 +11,9 @@ class EnumTest extends TestCase
   {
     $this->assertEquals(TestEnum::getValues(), ['v1', 'v2', '3']);
     $this->assertEquals(TestEnum::getKeyedValues(), ['v1' => 'V1', 'v2' => 'V2', '3' => '3']);
+    $this->assertEquals(TestEnum::getConstants(), ['V1' => 'v1', 'V2' => 'v2', 'V3' => '3']);
     $this->assertEquals(TestEnumDisplay::getKeyedValues(), ['v1' => 'Version 1', 'v2' => 'Version 2', '3' => '3']);
+    $this->assertEquals(TestEnumDisplay::getConstants(), ['V1' => 'v1', 'V2' => 'v2', 'V3' => '3']);
   }
 
   public function testValid()
@@ -59,5 +61,10 @@ class EnumTest extends TestCase
     $this->assertTrue($enum->is(TestEnum::V1));
     $this->assertFalse($enum->is(new TestEnum(TestEnum::V1)));
     $this->assertTrue($enum->is(new TestEnum(TestEnum::V1, 'api.com')));
+  }
+
+  public function testToString()
+  {
+    $this->assertEquals('v2', (string)TestEnumDisplay::V2());
   }
 }

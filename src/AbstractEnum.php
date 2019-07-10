@@ -46,6 +46,11 @@ abstract class AbstractEnum
     return array_values(static::_valueCache());
   }
 
+  public static function getConstants()
+  {
+    return static::_valueCache();
+  }
+
   /**
    * @param $value
    *
