@@ -30,7 +30,7 @@ abstract class AbstractEnum
     return $return;
   }
 
-  final private static function _valueCache()
+  final protected static function _valueCache()
   {
     if(!isset(self::$_valueCache[static::class]))
     {
