@@ -3,6 +3,7 @@ namespace Packaged\Tests;
 
 use Packaged\Tests\supporting\TestEnum;
 use Packaged\Tests\supporting\TestEnumDisplay;
+use Packaged\Tests\supporting\TestingEnum;
 use PHPUnit\Framework\TestCase;
 
 class EnumTest extends TestCase
@@ -20,7 +21,11 @@ class EnumTest extends TestCase
   {
     $this->assertTrue(TestEnum::isValid('v1'));
     $this->assertFalse(TestEnum::isValid('1'));
+    $this->assertTrue(TestEnum::isValid(TestingEnum::V2()));
+    $this->assertFalse(TestEnum::isValidStrict(TestingEnum::V2()));
     $this->assertTrue(TestEnum::isValid(3));
+    $this->assertTrue(TestEnum::isValid(TestEnum::V2()));
+    $this->assertTrue(TestEnum::isValidStrict(TestEnum::V2()));
     $this->assertFalse(TestEnum::isValidStrict(3));
   }
 

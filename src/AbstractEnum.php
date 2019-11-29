@@ -68,6 +68,10 @@ abstract class AbstractEnum
    */
   final public static function isValid($value)
   {
+    if($value instanceof AbstractEnum)
+    {
+      $value = $value->getValue();
+    }
     return in_array($value, static::_valueCache(), false);
   }
 
@@ -78,6 +82,10 @@ abstract class AbstractEnum
    */
   final public static function isValidStrict($value)
   {
+    if($value instanceof static)
+    {
+      $value = $value->getValue();
+    }
     return in_array($value, static::_valueCache(), true);
   }
 
